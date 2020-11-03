@@ -10,4 +10,4 @@ Getting books from Project Gutenberg: [gutenbergr](https://github.com/ropensci/g
 
 **Now go ahead and find out what happens in the books that you're interested in but don't actually want to read!**
 
-Further reading: G. Erkan, D. Radev. (2004). *LexRank: Graph-based Lexical Centrality as Salience in Text Summarization*. Journal of Artificial Intelligence Research. 22: 457-479.
+Further reading: G. Erkan, D.R. Radev. (2004). *LexRank: Graph-based Lexical Centrality as Salience in Text Summarization*. Journal of Artificial Intelligence Research. 22: 457-479.
