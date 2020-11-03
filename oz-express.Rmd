@@ -43,9 +43,10 @@ oz_original <- oz_original %>%
   slice(-c(1:80))
 ```
 
-## Prep for LexRank
+## Do the LexRank
 
-The last time I downloaded this book in April 2020, chapter indicators were of the form `4.`, it seems like it has changed now to `Chapter IV.`!
+The last time I downloaded this book in April 2020, chapter indicators were of the form `4.`, it seems like it has changed now to `Chapter IV.`! This
+code might break if they change it again.
 
 We will consider each chapter to be of a similar topic - each chapter will represent a single document. We will perform LexRank within each chapter.
 To reduce our reading, we will try to reduce **each** chapter to its top 20% scoring LexRank sentences. When the LexRank algorithm has finished running, 
