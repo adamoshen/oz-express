@@ -26,7 +26,8 @@ library(kableExtra)
 
 # Wizard of Oz
 
-First download the book. Get rid of chapter titles throughout the book before removing the front matter otherwise they get mixed into the text.
+First download the book. Get rid of chapter titles throughout the book before removing the front matter otherwise they get mixed into
+the text.
 
 ```{r, eval=FALSE}
 oz_original <- gutenberg_download(55)
@@ -45,9 +46,13 @@ oz_original <- oz_original %>%
 
 ## Do the LexRank
 
-The last time I downloaded this book in April 2020, chapter indicators were of the form `4.`, it seems like it has changed now to `Chapter IV.`! This code might break if they change it again.
+The last time I downloaded this book in April 2020, chapter indicators were of the form `4.`, it seems like it has changed now to
+`Chapter IV.`! This code might break if they change it again.
 
-We will assume each chapter's sentences are of a similar topic - each chapter will represent a single document. We will perform LexRank within each chapter. To reduce our reading, we will try to reduce **each** chapter to its top 20% scoring LexRank sentences. When the LexRank algorithm has finished running, we sort our sentences back in chronological order (rather than sorting by LexRank) so that we can get a sense of the actual story.
+We will assume each chapter's sentences are of a similar topic - each chapter will represent a single document. We will perform
+LexRank within each chapter. To reduce our reading, we will try to reduce **each** chapter to its top 20% scoring LexRank sentences.
+When the LexRank algorithm has finished running, we sort our sentences back in chronological order (rather than sorting by LexRank)
+so that we can get a sense of the actual story.
 
 ```{r, eval=FALSE}
 oz_express <- oz_original %>%
