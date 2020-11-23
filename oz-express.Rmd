@@ -63,7 +63,7 @@ oz_express <- oz_original %>%
   unnest_tokens(output=sentence, input=text, token="sentences", to_lower=FALSE) %>%
   # Cloning a dummy chapter column so I can have one inside and one outside after nesting
   mutate(sentnum=1:n(), chnum=chapter) %>%
-  mutate_at(vars(chapter), as.factor) %>%
+  mutate(across(chapter, as.factor)) %>%
   group_by(chnum) %>%
   nest(documents = c(sentence, sentnum, chapter)) %>%
   pluck("documents") %>%
