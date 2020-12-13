@@ -62,13 +62,14 @@ oz_prep <- oz_original %>%
   mutate(text=str_remove_all(text, pattern="^Chapter.*$")) %>%
   filter(chapter != 0) %>%
   unnest_tokens(output=sentence, input=text, token="sentences", to_lower=FALSE) %>%
-  # Cloning a dummy chapter column so I can have one inside and one outside after nesting
-  mutate(sentnum=1:n(), chnum=chapter) %>%
+  mutate(sentnum=1:n()) %>%
   mutate(across(chapter, as.factor)) %>%
-  group_by(chnum) %>%
-  nest(documents = c(sentence, sentnum, chapter)) %>%
-  ungroup() %>%
-  pluck("documents")
+  group_by(chapter) %>%
+  group_split()
+```
+
+```{r, eval=FALSE, include=FALSE}
+saveRDS(oz_prep, "./oz_prep.RDS")
 ```
 
 ## Do the LexRank
@@ -76,6 +77,10 @@ oz_prep <- oz_original %>%
 To reduce our reading, we will try to reduce **each** chapter to its top 20% scoring LexRank sentences.
 When the LexRank algorithm has finished running, we sort our sentences back in chronological order (rather than sorting by LexRank)
 so that we can get a sense of the actual story.
+
+```{r, echo=FALSE}
+oz_prep <- readRDS("./oz_prep.RDS")
+```
 
 ```{r, eval=FALSE}
 oz_express <- oz_prep %>%
@@ -90,14 +95,14 @@ oz_express <- oz_prep %>%
 ```
 
 ```{r, eval=FALSE, include=FALSE}
-saveRDS(oz_express, "./oz.RDS")
-```
-
-```{r, echo=FALSE}
-oz_express <- readRDS("./oz.RDS")
+saveRDS(oz_express, "./oz_express.RDS")
 ```
 
 ## Oz Express
+
+```{r, echo=FALSE}
+oz_express <- readRDS("./oz_express.RDS")
+```
 
 ```{r}
 oz_express %>% 
