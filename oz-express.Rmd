@@ -26,8 +26,13 @@ library(kableExtra)
 
 # Wizard of Oz
 
+## Data prep
+
 First download the book. Get rid of chapter titles throughout the book before removing the front matter otherwise they get mixed into
-the text.
+the text. 
+
+The last time I downloaded this book in April 2020, chapter indicators were of the form `4.`, it seems like it has changed now to
+`Chapter IV.`! This code might break if they change it again.
 
 ```{r, eval=FALSE}
 oz_original <- gutenberg_download(55)
@@ -37,6 +42,8 @@ chapter_titles <- oz_original %>%
   pull(text) %>%
   # There's a space out front in the TOC
   str_remove_all(pattern=" Chapter [IVX]+\\. ") %>%
+  # There's a space in front of Chapter 6's title
+  str_remove_all %>%
   paste0("(", ., ")", collapse="|")
 
 oz_original <- oz_original %>%
@@ -44,18 +51,12 @@ oz_original <- oz_original %>%
   slice(-c(1:80))
 ```
 
-## Do the LexRank
-
-The last time I downloaded this book in April 2020, chapter indicators were of the form `4.`, it seems like it has changed now to
-`Chapter IV.`! This code might break if they change it again.
-
 We will assume each chapter's sentences are of a similar topic - each chapter will represent a single document. We will perform
-LexRank within each chapter. To reduce our reading, we will try to reduce **each** chapter to its top 20% scoring LexRank sentences.
-When the LexRank algorithm has finished running, we sort our sentences back in chronological order (rather than sorting by LexRank)
-so that we can get a sense of the actual story.
+LexRank within each chapter. To do this, we will create a list of tibbles where each tibble represents a single chapter. Then we
+iterate the LexRank algorithm through each chapter separately.
 
 ```{r, eval=FALSE}
-oz_express <- oz_original %>%
+oz_prep <- oz_original %>%
   select(-gutenberg_id) %>%
   mutate(chapter=cumsum(str_detect(text, pattern="^Chapter"))) %>%
   mutate(text=str_remove_all(text, pattern="^Chapter.*$")) %>%
@@ -66,9 +67,22 @@ oz_express <- oz_original %>%
   mutate(across(chapter, as.factor)) %>%
   group_by(chnum) %>%
   nest(documents = c(sentence, sentnum, chapter)) %>%
-  pluck("documents") %>%
-  map_dfr(bind_lexrank, text=sentence, doc_id=chapter, level="sentences",
-      usePageRank=TRUE, continuous=TRUE) %>%
+  ungroup() %>%
+  pluck("documents")
+```
+
+## Do the LexRank
+
+To reduce our reading, we will try to reduce **each** chapter to its top 20% scoring LexRank sentences.
+When the LexRank algorithm has finished running, we sort our sentences back in chronological order (rather than sorting by LexRank)
+so that we can get a sense of the actual story.
+
+```{r, eval=FALSE}
+oz_express <- oz_prep %>%
+  map_dfr(
+    bind_lexrank, text=sentence, doc_id=chapter, level="sentences",
+    usePageRank=TRUE, continuous=TRUE
+  ) %>%
   drop_na(lexrank) %>%
   group_by(chapter) %>%
   slice_max(order_by=lexrank, prop=0.2) %>%
