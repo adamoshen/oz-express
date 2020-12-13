@@ -95,13 +95,13 @@ oz_express <- oz_prep %>%
 ```
 
 ```{r, eval=FALSE, include=FALSE}
-saveRDS(oz_express, "./oz_express.RDS")
+saveRDS(oz_express, "./data/oz_express.RDS")
 ```
 
 ## Oz Express
 
 ```{r, echo=FALSE}
-oz_express <- readRDS("./oz_express.RDS")
+oz_express <- readRDS("./data/oz_express.RDS")
 ```
 
 ```{r}
