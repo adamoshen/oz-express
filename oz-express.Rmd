@@ -43,7 +43,7 @@ chapter_titles <- oz_original %>%
   # There's a space out front in the TOC
   str_remove_all(pattern=" Chapter [IVX]+\\. ") %>%
   # There's a space in front of Chapter 6's title
-  str_remove_all %>%
+  str_remove_all(pattern="^ ") %>%
   paste0("(", ., ")", collapse="|")
 
 oz_original <- oz_original %>%
