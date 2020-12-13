@@ -51,6 +51,7 @@ oz_express <- oz_prep %>%
   slice_max(order_by=lexrank, prop=0.2) %>%
   arrange(sentnum)
 
+
 ##### Even shorter version #####
 oz_speedrun <- oz_express %>%
   group_by(chapter) %>%
