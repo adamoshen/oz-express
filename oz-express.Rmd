@@ -69,7 +69,7 @@ oz_prep <- oz_original %>%
 ```
 
 ```{r, eval=FALSE, include=FALSE}
-saveRDS(oz_prep, "./oz_prep.RDS")
+saveRDS(oz_prep, "./data/oz_prep.RDS")
 ```
 
 ## Do the LexRank
@@ -79,7 +79,7 @@ When the LexRank algorithm has finished running, we sort our sentences back in c
 so that we can get a sense of the actual story.
 
 ```{r, echo=FALSE}
-oz_prep <- readRDS("./oz_prep.RDS")
+oz_prep <- readRDS("./data/oz_prep.RDS")
 ```
 
 ```{r, eval=FALSE}
